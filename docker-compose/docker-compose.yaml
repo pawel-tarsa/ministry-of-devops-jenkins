@@ -1,0 +1,32 @@
+version: "2"
+#docker exec docker-compose_master_1 /bin/sh -c "cat /var/jenkins_home/secrets/initialAdminPassword"
+services:
+  master:
+    image: eeacms/jenkins-master
+    ports:
+      - "80:8080"
+    environment:
+      - JAVA_OPTS=-Xmx1024m
+    volumes:
+      - jenkins-master:/var/jenkins_home
+#docker-compose scale worker=3
+#docker exec -ti docker-compose_worker_1 sh
+#docker logs compose_worker_1 //for troubleshooting purposes
+  worker:
+    image: eeacms/jenkins-slave
+    environment:
+      JAVA_OPTS: "-Xmx1024m"
+      JENKINS_MASTER: "http://master:8080"
+      JENKINS_NAME: "worker"
+      JENKINS_USER: "jenkins"
+      JENKINS_PASS: "jenkins"
+      JENKINS_RETRY: "10"
+      JENKINS_SECRET: "e0b32e71bee746051170bdfb36c2a7fd0d0037edfd6632c5c0ca8cff516f9d59"
+    volumes:
+      - jenkins-worker:/var/jenkins_home/worker
+
+volumes:
+  jenkins-master:
+  jenkins-worker:
+
+
